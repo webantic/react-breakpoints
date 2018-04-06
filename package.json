@@ -1,8 +1,7 @@
 {
-  "name": "react-breakpoints",
-  "version": "2.0.5",
-  "description":
-    "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
+  "name": "@webantic/react-breakpoints",
+  "version": "3.0.0",
+  "description": "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
@@ -18,10 +17,8 @@
   "scripts": {
     "clean": "rimraf lib es",
     "compile": "npm run compile:commonjs && npm run compile:es",
-    "compile:commonjs":
-      "cross-env BABEL_ENV=commonjs babel modules --out-dir lib",
-    "compile:es":
-      "cross-env BABEL_ENV=es babel modules --out-dir es --ignore test.js",
+    "compile:commonjs": "cross-env BABEL_ENV=commonjs babel modules --out-dir lib",
+    "compile:es": "cross-env BABEL_ENV=es babel modules --out-dir es --ignore test.js",
     "prepublish": "npm run compile"
   },
   "peerDependencies": {

@@ -7,11 +7,13 @@ import { ERRORS } from './messages'
 class ReactBreakpoints extends React.Component {
   static contextTypes = {
     screenWidth: PropTypes.number,
-    breakpoints: PropTypes.objectOf(PropTypes.number)
+    breakpoints: PropTypes.objectOf(PropTypes.number),
+    breakpoint: PropTypes.string
   }
   static childContextTypes = {
     screenWidth: PropTypes.number,
-    breakpoints: PropTypes.objectOf(PropTypes.number)
+    breakpoints: PropTypes.objectOf(PropTypes.number),
+    breakpoint: PropTypes.string
   }
   static defaultProps = {
     debounceResize: true,
@@ -46,18 +48,30 @@ class ReactBreakpoints extends React.Component {
      */
     debounceDelay: PropTypes.number
   }
+  findCurrentBreakpoint() {
+    let current = null
+    Object.keys(this.state.breakpoints || {}).forEach(breakpoint => {
+      const pixels = this.state.breakpoints[breakpoint]
+      if (!current && window.innerWidth < pixels) {
+        current = pixels
+      }
+    })
+    return current
+  }
   constructor(props, context) {
     super(props, context)
     this.state = {
       screenWidth: this.props.guessedBreakpoint || this.props.defaultBreakpoint,
       breakpoints: this.props.breakpoints || {}
     }
+    this.state.breakpoint = this.findCurrentBreakpoint()
   }
   getChildContext() {
     return {
       breakpoints: {
         ...this.state.breakpoints
       },
+      breakpoint: this.state.currentBreakpoint,
       screenWidth: this.state.screenWidth
     }
   }
@@ -95,11 +109,15 @@ class ReactBreakpoints extends React.Component {
     }
   }
   readWidth = event => {
-    this.setState({
-      screenWidth: event.target.innerWidth
+    const current = this.findCurrentBreakpoint()
+    if (current !== this.state.breakpoint) {
+      this.setState({
+        screenWidth: event.target.innerWidth
         ? event.target.innerWidth
-        : window.innerWidth
-    })
+        : window.innerWidth,
+        breakpoint: current
+      })
+    }
   }
   render() {
     const { children } = this.props
